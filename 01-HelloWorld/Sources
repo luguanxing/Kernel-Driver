@@ -1,13 +1,13 @@
-#ÏÂ±ßÕâÐÐÖ¸¶¨Éú³ÉÇý¶¯Ãû×ÖHelloWorld.sys
+#ä¸‹è¾¹è¿™è¡ŒæŒ‡å®šç”Ÿæˆé©±åŠ¨åå­—HelloWorld.sys
 TARGETNAME=HelloWorld
-#ÏÂ±ßÕâÐÐÖ¸¶¨Éú³ÉÎÄ¼þµÄÀàÐÍDRIVERÖ¸Çý¶¯
+#ä¸‹è¾¹è¿™è¡ŒæŒ‡å®šç”Ÿæˆæ–‡ä»¶çš„ç±»åž‹DRIVERæŒ‡é©±åŠ¨
 TARGETTYPE=DRIVER
-#ÏÂ±ßÕâÐÐÖ¸¶¨Éú³ÉÇý¶¯ËùÔÚµÄÂ·¾¶\SYS\HelloWorld.sys
+#ä¸‹è¾¹è¿™è¡ŒæŒ‡å®šç”Ÿæˆé©±åŠ¨æ‰€åœ¨çš„è·¯å¾„\SYS\HelloWorld.sys
 TARGETPATH=SYS
-#ÏÂ±ßÕâÐÐÖ¸¶¨Ïà¹ØÍ·ÎÄ¼þËùÔÚÄ¿Â¼Â·¾¶
+#ä¸‹è¾¹è¿™è¡ŒæŒ‡å®šç›¸å…³å¤´æ–‡ä»¶æ‰€åœ¨ç›®å½•è·¯å¾„
 INCLUDES=$(BASEDIR)\inc;\
       $(BASEDIR)\inc\wxp;\ 
 
-##ÉÏ±ß±Ø¿ÕÒ»ÐÐD:\WINDDK\3790.1830 µÈ¼Û$(BASEDIR)
-#ÏÂ±ßÕâÐÐÖ¸¶¨Çý¶¯Ô´´úÂë*.cpp»òÕß*.c
-SOURCES=HelloWorld.c\ 
+##ä¸Šè¾¹å¿…ç©ºä¸€è¡ŒH:\WINDDK3790(DDKç›®å½•) ç­‰ä»·$(BASEDIR)
+#ä¸‹è¾¹è¿™è¡ŒæŒ‡å®šé©±åŠ¨æºä»£ç *.cppæˆ–è€…*.c
+SOURCES=HelloWorld.c\
