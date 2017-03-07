@@ -1,11 +1,11 @@
 #include <ntddk.h>
 
-VOID DriverUnload(PDRIVER_OBJECT driver) {
-	DbgPrint("Çý¶¯³É¹¦Ð¶ÔØ!");
+VOID DriverUnload(PDRIVER_OBJECT pDriverObject) {
+	DbgPrint("é©±åŠ¨æˆåŠŸå¸è½½!");
 }
 
-NTSTATUS DriverEntry(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path) {
-	DbgPrint("Çý¶¯³É¹¦¼ÓÔØ!\n");
+NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING reg_path) {
+	DbgPrint("é©±åŠ¨æˆåŠŸåŠ è½½!\n");
 	driver->DriverUnload = DriverUnload;
 	return STATUS_SUCCESS;
 }
