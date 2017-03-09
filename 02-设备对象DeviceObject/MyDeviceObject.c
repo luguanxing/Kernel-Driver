@@ -1,38 +1,37 @@
 #include <ntddk.h>
-#define INITCODE code_seg("INIT") 
-#define PAGECODE code_seg("PAGE")	//±íÊ¾ÄÚ´æ²»×ãÊ±£¬¿ÉÒÔ±»ÖÃ»»µ½Ó²ÅÌ
-#pragma INITCODE										//Ö¸µÄ´úÂëÔËÐÐºó ¾Í´ÓÄÚ´æÊÍ·Åµô
+#define INITCODE code_seg("INIT")	//æŒ‡çš„ä»£ç è¿è¡ŒåŽ å°±ä»Žå†…å­˜é‡Šæ”¾æŽ‰
+#define PAGECODE code_seg("PAGE")	//è¡¨ç¤ºå†…å­˜ä¸è¶³æ—¶ï¼Œå¯ä»¥è¢«ç½®æ¢åˆ°ç¡¬ç›˜							
 
 NTSTATUS CreateMyDevice(IN PDRIVER_OBJECT pDriverObject) {
 	NTSTATUS status;
-	UNICODE_STRING devName;				//Éè±¸Ãû³Æ
-	UNICODE_STRING sysLinkName;			//ÏµÍ³·ûºÅÁ´½ÓÃû
-	PDEVICE_OBJECT pDevObject;				//ÓÃÓÚ·µ»Ø´´½¨Éè±¸
+	UNICODE_STRING devName;				//è®¾å¤‡åç§°
+	UNICODE_STRING sysLinkName;			//ç³»ç»Ÿç¬¦å·é“¾æŽ¥å
+	PDEVICE_OBJECT pDevObject;				//ç”¨äºŽè¿”å›žåˆ›å»ºè®¾å¤‡
 
 	RtlInitUnicodeString(&devName, L"\\Device\\MyDevObj");
 	status = IoCreateDevice(pDriverObject, 0, &devName, FILE_DEVICE_UNKNOWN, 0, TRUE, &pDevObject);
-	if (!NT_SUCCESS(status)) {						//ÅÐ¶Ï´´½¨Éè±¸ÊÇ·ñ³É¹¦
+	if (!NT_SUCCESS(status)) {						//åˆ¤æ–­åˆ›å»ºè®¾å¤‡æ˜¯å¦æˆåŠŸ
 		if (status == STATUS_INSUFFICIENT_RESOURCES)
-			KdPrint(("×ÊÔ´²»×ã\n"));
+			KdPrint(("èµ„æºä¸è¶³\n"));
 		if (status == STATUS_OBJECT_NAME_EXISTS)
-			KdPrint(("Ö¸¶¨¶ÔÏóÃû´æÔÚ\n"));
+			KdPrint(("æŒ‡å®šå¯¹è±¡åå­˜åœ¨\n"));
 		if (status == STATUS_OBJECT_NAME_COLLISION)
-			KdPrint(("¶ÔÏóÃûÓÐ³åÍ»\n"));
+			KdPrint(("å¯¹è±¡åæœ‰å†²çª\n"));
 		return status;
 	}
-	KdPrint(("Éè±¸´´½¨³É¹¦\n"));
+	KdPrint(("è®¾å¤‡åˆ›å»ºæˆåŠŸ\n"));
 
-	pDevObject->Flags |= DO_BUFFERED_IO;	//»º³åÇø·½Ê½¶ÁÐ´
+	pDevObject->Flags |= DO_BUFFERED_IO;	//ç¼“å†²åŒºæ–¹å¼è¯»å†™
 	RtlInitUnicodeString(&sysLinkName, L"\\??\\MySysLinkName_20170307");
-	IoDeleteSymbolicLink(&sysLinkName);		//·ÀÖ¹ÒÑÓÐÏàÍ¬·ûºÅÁ´½ÓÖØ¸´
-	status = IoCreateSymbolicLink(&sysLinkName, &devName);		//ÅÐ¶ÏÉú³É·ûºÅÁ´½ÓÊÇ·ñ³É¹¦
+	IoDeleteSymbolicLink(&sysLinkName);		//é˜²æ­¢å·²æœ‰ç›¸åŒç¬¦å·é“¾æŽ¥é‡å¤
+	status = IoCreateSymbolicLink(&sysLinkName, &devName);		//åˆ¤æ–­ç”Ÿæˆç¬¦å·é“¾æŽ¥æ˜¯å¦æˆåŠŸ
 
 	if (!NT_SUCCESS(status)) {
-		KdPrint(("Éú³É·ûºÅÁ´½ÓÊ§°Ü\n"));
+		KdPrint(("ç”Ÿæˆç¬¦å·é“¾æŽ¥å¤±è´¥\n"));
 		IoDeleteDevice(pDevObject);
 		return status;
 	}
-	KdPrint(("Éú³É·ûºÅÁ´½Ó³É¹¦\n"));
+	KdPrint(("ç”Ÿæˆç¬¦å·é“¾æŽ¥æˆåŠŸ\n"));
 	return STATUS_SUCCESS;
 }
 
@@ -42,19 +41,20 @@ VOID DriverUnload(PDRIVER_OBJECT pDriverObject) {
 	UNICODE_STRING sysLinkName;
 
 	pDevObject = pDriverObject->DeviceObject;
-	IoDeleteDevice(pDevObject);	//È¡µÃÉè±¸²¢É¾³ý
-	KdPrint(("³É¹¦É¾³ýÉè±¸\n"));
+	IoDeleteDevice(pDevObject);	//å–å¾—è®¾å¤‡å¹¶åˆ é™¤
+	KdPrint(("æˆåŠŸåˆ é™¤è®¾å¤‡\n"));
 
 	RtlInitUnicodeString(&sysLinkName, L"\\??\\MySysLinkName_20170307");
-	IoDeleteSymbolicLink(&sysLinkName);	//È¡µÃ·ûºÅÁ´½Ó²¢É¾³ý
-	KdPrint(("³É¹¦É¾³ý·ûºÅÁ´½Ó\n"));
+	IoDeleteSymbolicLink(&sysLinkName);	//å–å¾—ç¬¦å·é“¾æŽ¥å¹¶åˆ é™¤
+	KdPrint(("æˆåŠŸåˆ é™¤ç¬¦å·é“¾æŽ¥\n"));
 
-	KdPrint(("Çý¶¯³É¹¦Ð¶ÔØ\n"));
+	KdPrint(("é©±åŠ¨æˆåŠŸå¸è½½\n"));
 }
 
 
+#pragma INITCODE
 NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING reg_path) {
-	KdPrint(("Çý¶¯³É¹¦¼ÓÔØ\n"));
+	KdPrint(("é©±åŠ¨æˆåŠŸåŠ è½½\n"));
 	CreateMyDevice(pDriverObject);
 	pDriverObject->DriverUnload=DriverUnload;
 	return STATUS_SUCCESS;
