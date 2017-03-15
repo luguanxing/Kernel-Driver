@@ -1,7 +1,7 @@
-# 设备对象DeviceObject
+# 读取SSDT函数当前地址
 ------
 
-添加第一个设备对象MyDeviceObject
+读取SSDT函数NtOpenProcess当前地址
 > * 效果
 > * 测试
 > * 总结
