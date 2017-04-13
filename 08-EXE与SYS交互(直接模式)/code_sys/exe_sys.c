@@ -1,38 +1,38 @@
 #include <ntddk.h>
 #include "CTL_CODE.h"
-#define INITCODE code_seg("INIT")	//Ö¸µÄ´úÂëÔËÐÐºó ¾Í´ÓÄÚ´æÊÍ·Åµô
-#define PAGECODE code_seg("PAGE")	//±íÊ¾ÄÚ´æ²»×ãÊ±£¬¿ÉÒÔ±»ÖÃ»»µ½Ó²ÅÌ							
+#define INITCODE code_seg("INIT")	//æŒ‡çš„ä»£ç è¿è¡ŒåŽ å°±ä»Žå†…å­˜é‡Šæ”¾æŽ‰
+#define PAGECODE code_seg("PAGE")	//è¡¨ç¤ºå†…å­˜ä¸è¶³æ—¶ï¼Œå¯ä»¥è¢«ç½®æ¢åˆ°ç¡¬ç›˜							
 
 NTSTATUS CreateMyDevice(IN PDRIVER_OBJECT pDriverObject) {
 	NTSTATUS status;
-	UNICODE_STRING devName;				//Éè±¸Ãû³Æ
-	UNICODE_STRING sysLinkName;			//ÏµÍ³·ûºÅÁ´½ÓÃû
-	PDEVICE_OBJECT pDevObject;				//ÓÃÓÚ·µ»Ø´´½¨Éè±¸
+	UNICODE_STRING devName;				//è®¾å¤‡åç§°
+	UNICODE_STRING sysLinkName;			//ç³»ç»Ÿç¬¦å·é“¾æŽ¥å
+	PDEVICE_OBJECT pDevObject;				//ç”¨äºŽè¿”å›žåˆ›å»ºè®¾å¤‡
 
 	RtlInitUnicodeString(&devName, L"\\Device\\MyDevObj");
 	status = IoCreateDevice(pDriverObject, 0, &devName, FILE_DEVICE_UNKNOWN, 0, TRUE, &pDevObject);
-	if (!NT_SUCCESS(status)) {						//ÅÐ¶Ï´´½¨Éè±¸ÊÇ·ñ³É¹¦
+	if (!NT_SUCCESS(status)) {						//åˆ¤æ–­åˆ›å»ºè®¾å¤‡æ˜¯å¦æˆåŠŸ
 		if (status == STATUS_INSUFFICIENT_RESOURCES)
-			KdPrint(("×ÊÔ´²»×ã\n"));
+			KdPrint(("èµ„æºä¸è¶³\n"));
 		if (status == STATUS_OBJECT_NAME_EXISTS)
-			KdPrint(("Ö¸¶¨¶ÔÏóÃû´æÔÚ\n"));
+			KdPrint(("æŒ‡å®šå¯¹è±¡åå­˜åœ¨\n"));
 		if (status == STATUS_OBJECT_NAME_COLLISION)
-			KdPrint(("¶ÔÏóÃûÓÐ³åÍ»\n"));
+			KdPrint(("å¯¹è±¡åæœ‰å†²çª\n"));
 		return status;
 	}
-	KdPrint(("Éè±¸´´½¨³É¹¦\n"));
+	KdPrint(("è®¾å¤‡åˆ›å»ºæˆåŠŸ\n"));
 
-	pDevObject->Flags |= DO_BUFFERED_IO;	//»º³åÇø·½Ê½¶ÁÐ´
+	pDevObject->Flags |= DO_BUFFERED_IO;	//ç¼“å†²åŒºæ–¹å¼è¯»å†™
 	RtlInitUnicodeString(&sysLinkName, L"\\??\\MySysLinkName_20170411");
-	IoDeleteSymbolicLink(&sysLinkName);		//·ÀÖ¹ÒÑÓÐÏàÍ¬·ûºÅÁ´½ÓÖØ¸´
-	status = IoCreateSymbolicLink(&sysLinkName, &devName);		//ÅÐ¶ÏÉú³É·ûºÅÁ´½ÓÊÇ·ñ³É¹¦
+	IoDeleteSymbolicLink(&sysLinkName);		//é˜²æ­¢å·²æœ‰ç›¸åŒç¬¦å·é“¾æŽ¥é‡å¤
+	status = IoCreateSymbolicLink(&sysLinkName, &devName);		//åˆ¤æ–­ç”Ÿæˆç¬¦å·é“¾æŽ¥æ˜¯å¦æˆåŠŸ
 
 	if (!NT_SUCCESS(status)) {
-		KdPrint(("Éú³É·ûºÅÁ´½ÓÊ§°Ü\n"));
+		KdPrint(("ç”Ÿæˆç¬¦å·é“¾æŽ¥å¤±è´¥\n"));
 		IoDeleteDevice(pDevObject);
 		return status;
 	}
-	KdPrint(("Éú³É·ûºÅÁ´½Ó³É¹¦\n"));
+	KdPrint(("ç”Ÿæˆç¬¦å·é“¾æŽ¥æˆåŠŸ\n"));
 	return STATUS_SUCCESS;
 }
 
@@ -43,19 +43,19 @@ VOID DriverUnload(PDRIVER_OBJECT pDriverObject) {
 	UNICODE_STRING sysLinkName;
 
 	pDevObject = pDriverObject->DeviceObject;
-	IoDeleteDevice(pDevObject);	//È¡µÃÉè±¸²¢É¾³ý
-	KdPrint(("³É¹¦É¾³ýÉè±¸\n"));
+	IoDeleteDevice(pDevObject);	//å–å¾—è®¾å¤‡å¹¶åˆ é™¤
+	KdPrint(("æˆåŠŸåˆ é™¤è®¾å¤‡\n"));
 
 	RtlInitUnicodeString(&sysLinkName, L"\\??\\MySysLinkName_20170411");
-	IoDeleteSymbolicLink(&sysLinkName);	//È¡µÃ·ûºÅÁ´½Ó²¢É¾³ý
-	KdPrint(("³É¹¦É¾³ý·ûºÅÁ´½Ó\n"));
+	IoDeleteSymbolicLink(&sysLinkName);	//å–å¾—ç¬¦å·é“¾æŽ¥å¹¶åˆ é™¤
+	KdPrint(("æˆåŠŸåˆ é™¤ç¬¦å·é“¾æŽ¥\n"));
 
-	KdPrint(("Çý¶¯³É¹¦Ð¶ÔØ\n"));
+	KdPrint(("é©±åŠ¨æˆåŠŸå¸è½½\n"));
 }
 
 
 
-NTSTATUS MyDispatchRoutine(IN PDEVICE_OBJECT pDevobj,IN PIRP pIrp) {		//Ò²¿É·Ö¿ªÓÃ²»Í¬º¯Êý´¦ÀíÀý³Ì
+NTSTATUS MyDispatchRoutine(IN PDEVICE_OBJECT pDevobj,IN PIRP pIrp) {		//ä¹Ÿå¯åˆ†å¼€ç”¨ä¸åŒå‡½æ•°å¤„ç†ä¾‹ç¨‹
 	ULONG info;
 	PIO_STACK_LOCATION psl=IoGetCurrentIrpStackLocation(pIrp);
 	switch (psl->MajorFunction) {
@@ -69,15 +69,15 @@ NTSTATUS MyDispatchRoutine(IN PDEVICE_OBJECT pDevobj,IN PIRP pIrp) {		//Ò²¿É·Ö¿ª
 		   break;
 	   case  IRP_MJ_DEVICE_CONTROL: {
 				NTSTATUS status = STATUS_SUCCESS;
-				ULONG cbin = psl->Parameters.DeviceIoControl.InputBufferLength;		//»ñÈ¡ÊäÈë»º³åÇø´óÐ¡
-				ULONG cbout = psl->Parameters.DeviceIoControl.OutputBufferLength;	//»ñÈ¡Êä³ö»º³åÇø´óÐ¡
-				ULONG code = psl->Parameters.DeviceIoControl.IoControlCode;			//µÃµ½IOCTLÂë
+				ULONG cbin = psl->Parameters.DeviceIoControl.InputBufferLength;		//èŽ·å–è¾“å…¥ç¼“å†²åŒºå¤§å°
+				ULONG cbout = psl->Parameters.DeviceIoControl.OutputBufferLength;	//èŽ·å–è¾“å‡ºç¼“å†²åŒºå¤§å°
+				ULONG code = psl->Parameters.DeviceIoControl.IoControlCode;			//å¾—åˆ°IOCTLç 
 				KdPrint(("Enter IRP_MJ_DEVICE_CONTROL\n"));
 				switch(code) {
 				   case add_code: {
 						int a, b, r;
-						int *inputBuffer = (int*)pIrp->AssociatedIrp.SystemBuffer;	//»ñÈ¡ÊäÈë»º³åÇøÊý¾Ý
-						int *outputBuffer = (int*)MmGetSystemAddressForMdlSafe(pIrp->MdlAddress,NormalPagePriority);	//»ñÈ¡Êä³ö»º³åÇøÊý¾Ý
+						int *inputBuffer = (int*)pIrp->AssociatedIrp.SystemBuffer;	//èŽ·å–è¾“å…¥ç¼“å†²åŒºæ•°æ®
+						int *outputBuffer = (int*)MmGetSystemAddressForMdlSafe(pIrp->MdlAddress,NormalPagePriority);	//èŽ·å–è¾“å‡ºç¼“å†²åŒºæ•°æ®
 						KdPrint(("Enter add_code\n"));
 						_asm {
 							mov eax, inputBuffer
@@ -100,7 +100,7 @@ NTSTATUS MyDispatchRoutine(IN PDEVICE_OBJECT pDevobj,IN PIRP pIrp) {		//Ò²¿É·Ö¿ª
 						int a, b, r;
 						int *inputBuffer = (int*)pIrp->AssociatedIrp.SystemBuffer;
 						int *outputBuffer = (int*)MmGetSystemAddressForMdlSafe(pIrp->MdlAddress,NormalPagePriority);
-						KdPrint(("Enter add_code\n"));
+						KdPrint(("Enter sub_code\n"));
 						_asm {
 							mov eax, inputBuffer
 							mov ebx, [eax]
@@ -122,13 +122,13 @@ NTSTATUS MyDispatchRoutine(IN PDEVICE_OBJECT pDevobj,IN PIRP pIrp) {		//Ò²¿É·Ö¿ª
 			}
 		   break;
 	   default:
-	 KdPrint(("ÆäËü´¦Àí")); 
+	 KdPrint(("å…¶å®ƒå¤„ç†")); 
 	}
 
-	pIrp->IoStatus.Information=info;			//ÉèÖÃ²Ù×÷µÄ×Ö½ÚÊýÎª0£¬ÕâÀïÎÞÊµ¼ÊÒâÒå
-	pIrp->IoStatus.Status=STATUS_SUCCESS;		//·µ»Ø³É¹¦
-	IoCompleteRequest(pIrp,IO_NO_INCREMENT);	//Ö¸Ê¾Íê³É´ËIRP
-	KdPrint(("Àë¿ªÅÉÇ²º¯Êý\n"));				//µ÷ÊÔÐÅÏ¢
+	pIrp->IoStatus.Information=info;			//è®¾ç½®æ“ä½œçš„å­—èŠ‚æ•°ä¸º0ï¼Œè¿™é‡Œæ— å®žé™…æ„ä¹‰
+	pIrp->IoStatus.Status=STATUS_SUCCESS;		//è¿”å›žæˆåŠŸ
+	IoCompleteRequest(pIrp,IO_NO_INCREMENT);	//æŒ‡ç¤ºå®Œæˆæ­¤IRP
+	KdPrint(("ç¦»å¼€æ´¾é£å‡½æ•°\n"));				//è°ƒè¯•ä¿¡æ¯
 	return STATUS_SUCCESS;
 }
 
@@ -138,8 +138,8 @@ NTSTATUS MyDispatchRoutine(IN PDEVICE_OBJECT pDevobj,IN PIRP pIrp) {		//Ò²¿É·Ö¿ª
 
 #pragma INITCODE
 NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING reg_path) {
-	KdPrint(("Çý¶¯³É¹¦¼ÓÔØ\n"));
-	pDriverObject->MajorFunction[IRP_MJ_CREATE] = MyDispatchRoutine;	//´´½¨ÅÉÇ²Àý³Ì£¬Ò²¿É·Ö¿ªÓÃ²»Í¬º¯Êý
+	KdPrint(("é©±åŠ¨æˆåŠŸåŠ è½½\n"));
+	pDriverObject->MajorFunction[IRP_MJ_CREATE] = MyDispatchRoutine;	//åˆ›å»ºæ´¾é£ä¾‹ç¨‹ï¼Œä¹Ÿå¯åˆ†å¼€ç”¨ä¸åŒå‡½æ•°
 	pDriverObject->MajorFunction[IRP_MJ_CLOSE] = MyDispatchRoutine;
 	pDriverObject->MajorFunction[IRP_MJ_READ] = MyDispatchRoutine;
 	pDriverObject->MajorFunction[IRP_MJ_WRITE] = MyDispatchRoutine;
