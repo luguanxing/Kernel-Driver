@@ -7,7 +7,7 @@
 ------
 ## 效果
 ![image](https://github.com/luguanxing/Kernel-Driver/blob/master/11-%E9%A9%B1%E5%8A%A8%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/pictures/0.jpg?raw=true)<br>
-应用层EXE读入两个数据<br><br><br>
+测试两个变量<br><br><br>
 
 ### RtlCopyMemory,RtlCopyBytes和RtlMoveMemory
 ### RtlZeroMemory和RtlFillMemory
