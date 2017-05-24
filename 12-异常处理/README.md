@@ -1,18 +1,32 @@
-¼ì²âÄÚ´æ¿ÉÓÃĞÔ
-ProbeForRead
+# å¼‚å¸¸å¤„ç†
+------
+
+ä¸€æ®µæµ‹è¯•å¼‚å¸¸å¤„ç†çš„ç¨‹åº
+> * æ•ˆæœ
+
+------
+## æ•ˆæœ
+![image](https://github.com/luguanxing/Kernel-Driver/blob/master/12-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/pictures/0.jpg?raw=true)<br>
+æµ‹è¯•å¼‚å¸¸å¤„ç†<br><br><br>
+
+```
 VOID ProbeForRead(
   __in  PVOID Address,
   __in  SIZE_T Length,
   __in  ULONG Alignment
 );
+```
 
-ProbeForWrite
+
+```
 VOID ProbeForWrite(
   __in  PVOID Address,
   __in  SIZE_T Length,
   __in  ULONG Alignment
 );
+```
 
+```
 NTSTATUS
 typedef LONG NTSTATUS;
 
@@ -49,6 +63,7 @@ NT_SUCCESS
 //
 // Define the facility codes
 
-R£¨Reserved)±£ÁôÎ»
-C (Customer) ¿Í»§Î»
-Sev(Severity) ÖØÒªÎ» ¹²2¸ö¶ş½øÖÆÎ» 00±íÊ¾³É¹¦ 01±íÊ¾ĞÅÏ¢ 10±íÊ¾¾¯¸æ 11±íÊ¾´íÎó
+Rï¼ˆReserved)ä¿ç•™ä½
+C (Customer) å®¢æˆ·ä½
+Sev(Severity) é‡è¦ä½ å…±2ä¸ªäºŒè¿›åˆ¶ä½ 00è¡¨ç¤ºæˆåŠŸ 01è¡¨ç¤ºä¿¡æ¯ 10è¡¨ç¤ºè­¦å‘Š 11è¡¨ç¤ºé”™è¯¯
+```
